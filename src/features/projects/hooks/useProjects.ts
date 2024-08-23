@@ -2,10 +2,11 @@ import { useMetadata } from "~/hooks/useMetadata";
 import { api } from "~/utils/api";
 import { type Application } from "~/features/applications/types";
 import { useFilter } from "~/features/filter/hooks/useFilter";
-import { type Filter } from "~/features/filter/types";
+import { OrderBy, type Filter } from "~/features/filter/types";
 import { Attestation as EASAttestation } from "@ethereum-attestation-service/eas-sdk/dist/eas";
 import { Attestation as CustomAttestation } from "~/utils/fetchAttestations";
 import { shuffleProjects } from "~/utils/shuffleProjects";
+import { useMemo } from "react";
 export function useProjectById(id: string) {
   const query = api.projects.get.useQuery(
     { ids: [id] },
@@ -21,8 +22,9 @@ export function useProjectsById(ids: string[]) {
 
 export function useSearchProjects(filterOverride?: Partial<Filter>) {
   const { setFilter, isRandom, ...filter } = useFilter();
+  const searchFilter = filter.search;
 
-  if (isRandom) {
+  if (isRandom && !searchFilter) {
     return api.projects.search.useQuery(
       {},
       {
@@ -34,8 +36,9 @@ export function useSearchProjects(filterOverride?: Partial<Filter>) {
     );
   } else {
     return api.projects.search.useQuery({
-      sortOrder: filter.sortOrder,
-      orderBy: filter.orderBy,
+      ...filter,
+      // Override to allow searching for projects when random
+      sortOrder: isRandom ? "asc" : filter.SortOrder.name,
       ...filterOverride,
     });
   }
