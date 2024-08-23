@@ -21,7 +21,7 @@ export function useProjectsById(ids: string[]) {
 
 export function useSearchProjects(filterOverride?: Partial<Filter>) {
   const { setFilter, isRandom, ...filter } = useFilter();
-  const searching = filter.search || filterOverride?.search !== "";
+  const searching = filter.search && filterOverride?.search !== "";
 
   if (isRandom && !searching) {
     return api.projects.search.useQuery(
