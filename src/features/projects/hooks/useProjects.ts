@@ -2,7 +2,7 @@ import { useMetadata } from "~/hooks/useMetadata";
 import { api } from "~/utils/api";
 import { type Application } from "~/features/applications/types";
 import { useFilter } from "~/features/filter/hooks/useFilter";
-import { SortOrder, type Filter } from "~/features/filter/types";
+import { type Filter } from "~/features/filter/types";
 import { Attestation as EASAttestation } from "@ethereum-attestation-service/eas-sdk/dist/eas";
 import { Attestation as CustomAttestation } from "~/utils/fetchAttestations";
 import { shuffleProjects } from "~/utils/shuffleProjects";
@@ -34,7 +34,7 @@ export function useSearchProjects(filterOverride?: Partial<Filter>) {
     );
   } else {
     return api.projects.search.useQuery({
-      sortOrder: filter.sortOrder as SortOrder,
+      sortOrder: filter.sortOrder,
       orderBy: filter.orderBy,
       ...filterOverride,
     });

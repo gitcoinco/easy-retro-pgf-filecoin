@@ -25,9 +25,5 @@ export function useFilter() {
   );
 
   const isRandom = filter.sortOrder === "random";
-
-  // Convert "random" to undefined or handle accordingly
-  const normalizedSortOrder = isRandom ? undefined : filter.sortOrder;
-
-  return { ...filter, sortOrder: normalizedSortOrder, setFilter, isRandom };
+  return { ...filter, setFilter, isRandom };
 }
