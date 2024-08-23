@@ -11,6 +11,14 @@ export const SortFilter = () => {
   const [search, setSearch] = useState("");
   useDebounce(() => setFilter({ search }), 500, [search]);
 
+  const validCombinations = {
+    time_random: "time_random",
+    name_asc: "name_asc",
+    name_desc: "name_desc",
+    time_asc: "time_asc",
+    time_desc: "time_desc",
+  } as const;
+
   return (
     <div className="mb-2 flex flex-1 flex-col items-end gap-2 sm:flex-row">
       <SearchInput
@@ -21,13 +29,13 @@ export const SortFilter = () => {
       />
       <SortByDropdown
         options={[
+          "time_random",
           "name_asc",
           "name_desc",
           "time_asc",
           "time_desc",
-          "time_random",
         ]}
-        value={`${orderBy}_${sortOrder}`}
+        value={`${orderBy}_${sortOrder}` as keyof typeof validCombinations}
         onChange={async (sort) => {
           const [orderBy, sortOrder] = sort.split("_") as [OrderBy, SortOrder];
 
