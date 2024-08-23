@@ -27,7 +27,6 @@ export const SortFilter = () => {
           "time_desc",
           "time_random",
         ]}
-        // @ts-ignore
         value={`${orderBy}_${sortOrder}`}
         onChange={async (sort) => {
           const [orderBy, sortOrder] = sort.split("_") as [OrderBy, SortOrder];
