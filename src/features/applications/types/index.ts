@@ -70,9 +70,11 @@ export const ApplicationSchema = z.object({
 
 export const ApplicationVerificationSchema = z.object({
   name: z.string().min(3),
+  pocName: z.string().min(3),
   projectEmail: z.string().email(),
-  projectPhysicalAddress: z.string().min(3),
-  sanctionedOrg: z.boolean(),
+  postalAddress: z.string().min(3),
+  slackUsername: z.string().min(3).optional(),
+  discordUsername: z.string().min(3).optional(),
 });
 
 export type Application = z.infer<typeof ApplicationSchema>;

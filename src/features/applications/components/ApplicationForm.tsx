@@ -324,26 +324,44 @@ export function ApplicationForm() {
         >
           <FormControl
             name="applicationVerification.name"
-            label="Legal name of entity or person receiving reward, if not entity"
+            label="Legal Company/Individual Name"
             required
           >
-            <Input placeholder="Your name" />
+            <Input placeholder="The name of the company or individual expected to receive the funds" />
+          </FormControl>
+          <FormControl
+            name="applicationVerification.pocName"
+            label="Point of Contact (POC) Name"
+            required
+          >
+            <Input placeholder="The individual we can contact regarding the application" />
           </FormControl>
           <FormControl
             name="applicationVerification.projectEmail"
             label="Project email"
             required
           >
-            <Input placeholder="Your project email" />
+            <Input placeholder="The address through which round operators may contact the applicant" />
           </FormControl>
           <FormControl
-            name="applicationVerification.projectPhysicalAddress"
-            label="Project physical address (including city, state, country)"
+            name="applicationVerification.postalAddress"
+            label="Postal address"
             required
           >
-            <Input placeholder="Your Address" />
+            <Input placeholder="The postal address of the individual or entity expected to receive funds" />
           </FormControl>
-          <SanctionedOrgField />
+          <FormControl
+            name="applicationVerification.slackUsername"
+            label="Filecoin Slack Username of POC"
+          >
+            <Input placeholder="Slack username" />
+          </FormControl>
+          <FormControl
+            name="applicationVerification.discordUsername"
+            label="Discord Username of POC"
+          >
+            <Input placeholder="Discord username" />
+          </FormControl>
         </FormSection>
 
         {error ? (
