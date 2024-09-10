@@ -109,16 +109,24 @@ export default function ProjectDetails({
                 {applicationVerificationData.name}
               </div>
               <div>
+                <text className="mr-2">POC name:</text>
+                {applicationVerificationData.pocName}
+              </div>
+              <div>
                 <text className="mr-2">Project email:</text>
                 {applicationVerificationData.projectEmail}
               </div>
               <div>
-                <text className="mr-2">Physical address:</text>
-                {applicationVerificationData.projectPhysicalAddress}
+                <text className="mr-2">Postal address:</text>
+                {applicationVerificationData.postalAddress}
               </div>
               <div>
-                <text className="mr-2">Sanctioned org:</text>
-                {applicationVerificationData.sanctionedOrg ? "Yes" : "No"}
+                <text className="mr-2">Slack username:</text>
+                {applicationVerificationData.slackUsername ?? "N/A"}
+              </div>
+              <div>
+                <text className="mr-2">Discord username:</text>
+                {applicationVerificationData.discordUsername ?? "N/A"}
               </div>
             </div>
           </div>
