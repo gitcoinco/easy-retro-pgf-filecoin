@@ -88,8 +88,8 @@ export const eas = {
 
 export const OSO = {
   url: process.env.NEXT_PUBLIC_OSO_URL ?? "",
-  apiKey: process.env.NEXT_PUBLIC_OSO_API_KEY ?? "",
-}
+  apiKey: process.env.OSO_API_KEY ?? "",
+};
 
 export const impactCategories = {
   INFRASTRUCTURE: { label: "Infrastructure & Dependencies" },
