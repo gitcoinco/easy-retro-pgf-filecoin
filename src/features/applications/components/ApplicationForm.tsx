@@ -3,7 +3,6 @@ import { toast } from "sonner";
 import { useController, useFormContext } from "react-hook-form";
 import { useLocalStorage } from "react-use";
 import { useSession } from "next-auth/react";
-
 import { ImageUpload } from "~/components/ImageUpload";
 import { Button } from "~/components/ui/Button";
 import {
@@ -117,6 +116,13 @@ export function ApplicationForm() {
               required
               label="Project avatar"
               name="profile.profileImageUrl"
+              className="w-48"
+              hint={
+                <span className="text-xs">
+                  Upload an image with<strong> 1:1 aspect ratio</strong>. Less
+                  than 1MB.
+                </span>
+              }
             >
               <ImageUpload className="h-48 w-48 " />
             </FormControl>
@@ -124,7 +130,13 @@ export function ApplicationForm() {
               required
               label="Project background image"
               name="profile.bannerImageUrl"
-              className="flex-1"
+              className="flex-1 "
+              hint={
+                <span className="text-xs">
+                  Upload an image with<strong> 4:1 aspect ratio</strong>. Less
+                  than 1MB.
+                </span>
+              }
             >
               <ImageUpload className="h-48 " />
             </FormControl>
