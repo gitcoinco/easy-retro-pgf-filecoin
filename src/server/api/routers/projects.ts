@@ -7,7 +7,7 @@ import {
   createSearchFilter,
 } from "~/utils/fetchAttestations";
 import { TRPCError } from "@trpc/server";
-import { config, eas, filecoinRounds } from "~/config";
+import { config, eas, filecoinRounds, getStartsAt } from "~/config";
 import { type Filter, FilterSchema } from "~/features/filter/types";
 import { fetchMetadata } from "~/utils/fetchMetadata";
 
@@ -42,6 +42,7 @@ export const projectsRouter = createTRPCRouter({
       });
     }),
   search: publicProcedure.input(FilterSchema).query(async ({ input }) => {
+    const startsAt = +getStartsAt(input.round) / 1000;
 
     const filters = [
       createDataFilter("type", "bytes32", "application"),
@@ -52,27 +53,35 @@ export const projectsRouter = createTRPCRouter({
       filters.push(createSearchFilter(input.search));
     }
 
-    return fetchAttestations([eas.schemas.approval], {
-      where: {
-        attester: {
-          in: filecoinRounds[input.round as keyof typeof filecoinRounds],
+    return fetchAttestations(
+      [eas.schemas.approval],
+      {
+        where: {
+          attester: {
+            in: filecoinRounds[input.round as keyof typeof filecoinRounds],
+          },
+          ...createDataFilter("type", "bytes32", "application"),
         },
-        ...createDataFilter("type", "bytes32", "application"),
       },
-    }).then((attestations = []) => {
+      startsAt,
+    ).then((attestations = []) => {
       const approvedIds = attestations
         .map(({ refUID }) => refUID)
         .filter(Boolean);
 
-      return fetchAttestations([eas.schemas.metadata], {
-        take: input.limit,
-        skip: input.cursor * input.limit,
-        orderBy: [createOrderBy(input.orderBy, input.sortOrder)],
-        where: {
-          id: { in: approvedIds },
-          AND: filters,
+      return fetchAttestations(
+        [eas.schemas.metadata],
+        {
+          take: input.limit,
+          skip: input.cursor * input.limit,
+          orderBy: [createOrderBy(input.orderBy, input.sortOrder)],
+          where: {
+            id: { in: approvedIds },
+            AND: filters,
+          },
         },
-      });
+        startsAt,
+      );
     });
   }),
 

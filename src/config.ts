@@ -16,6 +16,15 @@ export const roundsMap = {
   "2": "ez-rpgf-filecoin-2",
 };
 
+export const roundsStartsAt = {
+  "ez-rpgf-filecoin-1": new Date("2024-04-08T12:00:00.000Z"),
+  "ez-rpgf-filecoin-2": new Date(process.env.NEXT_PUBLIC_START_DATE!),
+};
+
+export const getStartsAt = (roundId: string) => {
+  return roundsStartsAt[roundId as keyof typeof roundsStartsAt];
+};
+
 function getAdmins(roundId: string) {
   return (
     (admins[roundId as keyof typeof admins] ?? "").split(",") as `0x${string}`[]

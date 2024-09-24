@@ -45,7 +45,7 @@ export function RoundProgress() {
           <div
             key={i}
             className={cn(
-              "z-10 flex-1  rounded-xl border-l border-yellow-400 p-4 transition-opacity",
+              "z-5 flex-1  rounded-xl border-l border-yellow-400 p-4 ",
               {
                 ["opacity-50"]: currentStepIndex <= i,
               },
