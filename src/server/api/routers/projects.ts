@@ -31,15 +31,21 @@ export const projectsRouter = createTRPCRouter({
     });
   }),
   get: publicProcedure
-    .input(z.object({ ids: z.array(z.string()) }))
-    .query(async ({ input: { ids } }) => {
+    .input(
+      z.object({ ids: z.array(z.string()), startsAt: z.number().optional() }),
+    )
+    .query(async ({ input: { ids, startsAt } }) => {
       if (!ids.length) {
         throw new TRPCError({ code: "NOT_FOUND" });
       }
 
-      return fetchAttestations([eas.schemas.metadata], {
-        where: { id: { in: ids } },
-      });
+      return fetchAttestations(
+        [eas.schemas.metadata],
+        {
+          where: { id: { in: ids } },
+        },
+        startsAt,
+      );
     }),
   search: publicProcedure.input(FilterSchema).query(async ({ input }) => {
     const startsAt = +getStartsAt(input.round) / 1000;

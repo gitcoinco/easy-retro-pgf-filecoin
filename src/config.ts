@@ -16,6 +16,10 @@ export const roundsMap = {
   "2": "ez-rpgf-filecoin-2",
 };
 
+export const previousRoundsMap = {
+  "1": "ez-rpgf-filecoin-1",
+};
+
 export const roundsStartsAt = {
   "ez-rpgf-filecoin-1": new Date("2024-04-08T12:00:00.000Z"),
   "ez-rpgf-filecoin-2": new Date(process.env.NEXT_PUBLIC_START_DATE!),
