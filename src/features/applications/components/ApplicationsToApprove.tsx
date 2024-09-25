@@ -50,7 +50,7 @@ export function ApplicationItem({
   const {
     fundingSources = [],
     impactMetrics = [],
-    impactCategory,
+    impactCategory = [],
   } = metadata.data ?? {};
   const isApproved = Boolean(approvedBy);
 

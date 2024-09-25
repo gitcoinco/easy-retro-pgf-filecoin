@@ -80,7 +80,7 @@ const Dropdown = ({
   ) : (
     ReactDOM.createPortal(
       <ul
-        className="absolute z-50 flex flex-col items-center rounded-md border border-gray-300 bg-white shadow-lg shadow-md"
+        className="absolute z-50 flex flex-col items-center rounded-md border border-gray-300 bg-white shadow-lg"
         style={{
           top: `${position?.top}px`,
           left: `${position?.left}px`,
@@ -249,7 +249,7 @@ export const Header = ({ navLinks }: { navLinks: NavLinkType[] }) => {
   useClickAway(drawerRef, () => setOpen(false));
 
   return (
-    <header className="relative z-10">
+    <header className="relative z-50">
       <div className="container mx-auto flex h-[72px] max-w-screen-2xl items-center px-2">
         <div
           className={clsx("mr-4 flex items-center", {

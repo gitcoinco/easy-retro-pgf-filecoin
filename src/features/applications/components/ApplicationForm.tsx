@@ -460,7 +460,12 @@ function ImpactTags() {
 
   const selected = watch("application.impactCategory") ?? [];
 
-  const error = formState.errors.application?.impactCategory;
+  const error =
+    (formState.errors.application?.impactCategory ?? selected.length > 1)
+      ? { message: "Select only one impact category" }
+      : selected.length === 0
+        ? { message: "Select one impact category" }
+        : null;
 
   return (
     <div className="mb-4">
