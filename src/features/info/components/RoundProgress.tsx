@@ -57,7 +57,7 @@ export function RoundProgress() {
           >
             <h3 className="font-semibold">{step.label}</h3>
             <div>
-              {format(step.date, i === 4 ? "MMM yyyy" : "dd MMM yyyy")}
+              {format(step.date, i === 3 ? "MMM yyyy" : "dd MMM yyyy")}
             </div>
           </div>
         ))}
