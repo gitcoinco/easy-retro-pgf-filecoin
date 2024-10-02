@@ -9,6 +9,8 @@ const steps = [
   {
     label: "Showcase",
     date: config.showcaseStartsAt,
+    startDate: config.showcaseStartsAt,
+    endDate: config.startsAt,
   },
   /* {
     label: "Review & Approval",
@@ -17,10 +19,14 @@ const steps = [
   {
     label: "Registration",
     date: config.startsAt,
+    startDate: config.startsAt,
+    endDate: config.registrationEndsAt,
   },
   {
     label: "Voting",
-    date: config.reviewEndsAt,
+    date: config.reviewStartsAt,
+    startDate: config.reviewStartsAt,
+    endDate: config.votingEndsAt,
   },
   // {
   //   label: "Tallying",
@@ -29,6 +35,8 @@ const steps = [
   {
     label: "Distribution",
     date: config.resultsAt,
+    startDate: config.resultsAt,
+    endDate: config.resultsAt,
   },
 ];
 
@@ -57,7 +65,9 @@ export function RoundProgress() {
           >
             <h3 className="font-semibold">{step.label}</h3>
             <div>
-              {format(step.date, i === 3 ? "MMM yyyy" : "dd MMM yyyy")}
+              {i === 3
+                ? format(step.date, "MMM yyyy")
+                : `${format(step.startDate, "dd MMM")}-${format(step.endDate, "dd MMM yyyy")}`}
             </div>
           </div>
         ))}
@@ -80,7 +90,7 @@ const ProgressBar = createComponent(
 );
 
 function calculateProgress(steps: { label: string; date: Date }[]) {
-  const now = Number(new Date());
+  const now = Number(new Date("2024-11-09T00:00:00.000Z"));
 
   let currentStepIndex = steps.findIndex(
     (step, index) =>
