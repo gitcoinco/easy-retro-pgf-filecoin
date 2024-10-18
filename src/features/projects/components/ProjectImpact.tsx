@@ -93,7 +93,7 @@ export default function ProjectImpact({ isLoading, project }: Props) {
           Object.entries(categoryQuestions ?? {}).length > 0 && (
             <div className="mt-8">
               <Heading as="h3" size="xl" className="mb-4">
-                Impact Category
+                Category-specific impact
               </Heading>
               <hr className="mb-8 mt-2" />
 
