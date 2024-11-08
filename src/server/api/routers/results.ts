@@ -7,7 +7,7 @@ import {
 } from "~/server/api/trpc";
 import { FilterSchema } from "~/features/filter/types";
 import { fetchAttestations } from "~/utils/fetchAttestations";
-import { eas } from "~/config";
+import { config, eas } from "~/config";
 import { calculateVotes } from "~/utils/calculateResults";
 import { type Vote } from "~/features/ballot/types";
 import { getSettings } from "./config";
@@ -76,19 +76,21 @@ export const resultsRouter = createTRPCRouter({
     }),
 });
 
-const defaultCalculation = {
-  calculation: "average",
-  threshold: 1,
-};
+const defaultCalculation = config.distributionCalculation;
 async function calculateBallotResults(db: PrismaClient) {
   const settings = await getSettings(db);
   const calculation = settings?.config?.calculation ?? defaultCalculation;
 
   // Fetch the ballots
-  const ballots = await db.ballot.findMany({
+  let ballots = await db.ballot.findMany({
     where: { publishedAt: { not: null } },
     select: { voterId: true, votes: true },
   });
+
+  const roundId = config.roundId.split("ez-rpgf-filecoin-")[1];
+  if (roundId !== "1") {
+    ballots = ballots.filter((b) => b.voterId.includes(`${roundId}-`));
+  }
 
   const projects = calculateVotes(
     ballots as unknown as { voterId: string; votes: Vote[] }[],

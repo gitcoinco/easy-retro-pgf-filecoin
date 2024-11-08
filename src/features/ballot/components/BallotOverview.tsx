@@ -125,13 +125,13 @@ function BallotOverview() {
         <BallotSection
           title={
             <div className="flex justify-between">
-              Votes allocated:
+              Filecoin allocated:
               <div
                 className={clsx("text-gray-900 dark:text-gray-300", {
                   ["text-red-500"]: sum > config.votingMaxTotal,
                 })}
               >
-                {formatNumber(sum)} votes
+                {formatNumber(sum)} FIL
               </div>
             </div>
           }
@@ -139,7 +139,7 @@ function BallotOverview() {
           <Progress value={sum} max={config.votingMaxTotal} />
           <div className="flex justify-between text-xs">
             <div>Total</div>
-            <div>{formatNumber(config.votingMaxTotal ?? 0)} votes</div>
+            <div>{formatNumber(config.votingMaxTotal ?? 0)} FIL</div>
           </div>
         </BallotSection>
         {ballot?.publishedAt ? (

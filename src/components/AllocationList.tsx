@@ -210,7 +210,7 @@ export function DistributionForm(props: AllocationFormProps) {
     <AllocationFormWrapper
       {...props}
       renderExtraColumn={({}, i) => (
-        <FormControl className="mb-0" name={`votes.${i}.payoutAddress`}>
+        <FormControl className="mb-0" name={`votes.${i}.githubLink`}>
           <Input className="min-w-64 font-mono" />
         </FormControl>
       )}

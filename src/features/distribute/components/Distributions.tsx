@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { z } from "zod";
-import { formatUnits, getAddress, isAddress } from "viem";
+import { formatUnits } from "viem";
 
 import { EmptyState } from "~/components/EmptyState";
 import { Button } from "~/components/ui/Button";
@@ -13,56 +13,36 @@ import {
   DistributionSchema,
 } from "~/features/distribute/types";
 import { api } from "~/utils/api";
-import { usePoolAmount } from "../hooks/useAlloPool";
-import { ConfirmDistributionDialog } from "./ConfirmDistributionDialog";
 import { ExportCSV } from "./ExportCSV";
 import { calculatePayout } from "../utils/calculatePayout";
 import { formatNumber } from "~/utils/formatNumber";
 import { format } from "~/utils/csv";
-import {
-  ethAddressFromDelegated,
-  validateAddressString,
-} from "@glif/filecoin-address";
-
-function convertFilecoinAddress(addr: string) {
-  try {
-    if (!addr) return "";
-    if (isAddress(addr)) return getAddress(addr);
-    if (validateAddressString(addr)) return ethAddressFromDelegated(addr);
-  } catch (error) {
-    return "";
-    console.log(addr, error);
-  }
-}
+import { config } from "~/config";
 import { ImportCSV } from "./ImportCSV";
 
 export function Distributions() {
-  const [confirmDistribution, setConfirmDistribution] = useState<
-    Distribution[]
-  >([]);
   const [importedDistribution, setImportedDistribution] = useState<
     Distribution[]
   >([]);
 
-  const poolAmount = usePoolAmount();
   const votes = api.results.votes.useQuery();
   const projectIds = Object.keys(votes.data?.projects ?? {});
-
   const projects = api.projects.payoutAddresses.useQuery(
     { ids: projectIds },
     { enabled: Boolean(projectIds.length) },
   );
+  const githubProjectLinks: Record<string, string> = projects.data ?? {};
 
-  const payoutAddresses: Record<string, string> = projects.data ?? {};
+  const totalTokens = config.poolAmount;
+
   const totalVotes = BigInt(votes.data?.totalVotes ?? 0);
-  const totalTokens = poolAmount.data ?? 0n;
   const projectVotes = votes.data?.projects ?? {};
   const distributions = useMemo(
     () =>
       projectIds
         ?.map((projectId) => ({
           projectId,
-          payoutAddress: convertFilecoinAddress(payoutAddresses[projectId]),
+          githubLink: githubProjectLinks[projectId] ?? "",
           amount: projectVotes[projectId]?.votes ?? 0,
         }))
         .filter((p) => p.amount > 0)
@@ -79,13 +59,13 @@ export function Distributions() {
                 )
               : p.amount,
         })),
-    [projectIds, payoutAddresses, projectVotes, totalVotes, totalTokens],
+    [projectIds, projectVotes, totalVotes, totalTokens, githubProjectLinks],
   );
 
   if (!votes.isPending && !projectIds.length) {
     return <EmptyState title="No project votes found" />;
   }
-  if (projects.isPending ?? votes.isPending ?? poolAmount.isPending) {
+  if (projects.isPending ?? votes.isPending) {
     return (
       <div className="flex h-full items-center justify-center">
         <Spinner className="size-6" />
@@ -109,8 +89,7 @@ export function Distributions() {
             : distributions,
         }}
         onSubmit={(values) => {
-          console.log("Distribute", values.votes[0]);
-          setConfirmDistribution(values.votes);
+          return void 0;
         }}
       >
         <div className="mb-2 flex items-center justify-between gap-2">
@@ -119,13 +98,10 @@ export function Distributions() {
           <div className="flex items-center gap-2">
             <ImportCSV onImportDistribution={setImportedDistribution} />
             <ExportCSV votes={distributions} />
-            <Button variant="primary" type="submit">
-              Distribute tokens
-            </Button>
           </div>
         </div>
         <div className="flex items-center gap-4">
-          <div>Total votes: {formatNumber(votes.data?.totalVotes)}</div>
+          <div>Total Fil: {formatNumber(votes.data?.totalVotes)}</div>
           <ExportVotes />
         </div>
         <div className="min-h-[360px] overflow-auto">
@@ -135,7 +111,7 @@ export function Distributions() {
                 <div key={alloc.projectId} className="flex gap-2">
                   <div className="flex-1">
                     <div className="font-semibold">{alloc.name}</div>
-                    <pre>{alloc.payoutAddress}</pre>
+                    <pre>{alloc.githubLink}</pre>
                   </div>
                   <div>{alloc.amount}</div>
                 </div>
@@ -148,7 +124,7 @@ export function Distributions() {
                 <Thead>
                   <Tr>
                     <Th>Project</Th>
-                    <Th>Payout address</Th>
+                    <Th>GithubLink</Th>
                     <Th>Amount</Th>
                   </Tr>
                 </Thead>
@@ -156,10 +132,6 @@ export function Distributions() {
             />
           )}
         </div>
-        <ConfirmDistributionDialog
-          distribution={confirmDistribution}
-          onOpenChange={() => setConfirmDistribution([])}
-        />
       </Form>
     </div>
   );
