@@ -1,4 +1,5 @@
 import type { Application } from "~/features/applications/types";
+import type { Attestation } from "~/utils/fetchAttestations";
 import { api } from "~/utils/api";
 
 export function useRoundProjects({ round }: { round: string }) {
@@ -8,6 +9,6 @@ export function useRoundProjects({ round }: { round: string }) {
 
   return {
     ...query,
-    data: query.data as unknown as Application[] | undefined,
+    data: query.data as unknown as (Application & Attestation)[] | undefined,
   };
 }

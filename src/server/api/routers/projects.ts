@@ -87,11 +87,12 @@ export const projectsRouter = createTRPCRouter({
 
       const projectsWithMetadata = await Promise.all(
         projects.map(async (project) => {
-          const { name, metadataPtr } = project;
+          const { id, name, metadataPtr } = project;
           const metadata = await fetchMetadata(metadataPtr);
           return {
             ...metadata,
             name,
+            id,
           };
         }),
       );
