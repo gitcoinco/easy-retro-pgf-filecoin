@@ -64,17 +64,17 @@ export const projectsRouter = createTRPCRouter({
           Promise.all(
             attestations.map((attestation) =>
               fetchMetadata(attestation.metadataPtr).then((data) => {
-                const { payoutAddress } = data as unknown as {
-                  payoutAddress: string;
+                const { githubProjectLink } = data as unknown as {
+                  githubProjectLink: string;
                 };
-                return { projectId: attestation.id, payoutAddress };
+                return { projectId: attestation.id, githubProjectLink };
               }),
             ),
           ),
         )
         .then((projects) =>
           projects.reduce(
-            (acc, x) => ({ ...acc, [x.projectId]: x.payoutAddress }),
+            (acc, x) => ({ ...acc, [x.projectId]: x.githubProjectLink }),
             {},
           ),
         );

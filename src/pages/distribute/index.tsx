@@ -4,7 +4,6 @@ import { Form, FormControl, Input, Select } from "~/components/ui/Form";
 import { Skeleton } from "~/components/ui/Skeleton";
 import { Spinner } from "~/components/ui/Spinner";
 import { config } from "~/config";
-import ConfigurePool from "~/features/distribute/components/CreatePool";
 import { Distributions } from "~/features/distribute/components/Distributions";
 import { CalculationSchema } from "~/features/distribute/types";
 import { AdminLayout } from "~/layouts/AdminLayout";
@@ -19,13 +18,13 @@ export default function DistributePage() {
 
   const calculation = settings.data?.config?.calculation;
 
+  const disableUpdateCalculation = true;
+
   return (
     <AdminLayout
       sidebar="left"
       sidebarComponent={
         <div className="space-y-4">
-          <ConfigurePool />
-
           {settings.isPending ? (
             <div />
           ) : (
@@ -42,21 +41,26 @@ export default function DistributePage() {
               >
                 <div className="gap-2">
                   <FormControl name="calculation" label="Calculation">
-                    <Select disabled={settings.isPending} className={"w-full"}>
+                    <Select
+                      disabled={disableUpdateCalculation}
+                      className={"w-full"}
+                    >
                       <option value="average">Mean (average)</option>
                       <option value="median">Median</option>
                       <option value="sum">Sum</option>
                     </Select>
                   </FormControl>
-                  <MinimumQuorum />
-                  <Button
-                    variant="primary"
-                    type="submit"
-                    className="w-full"
-                    disabled={setConfig.isPending}
-                  >
-                    Update calculation
-                  </Button>
+                  <MinimumQuorum disabled={disableUpdateCalculation} />
+                  {!disableUpdateCalculation && (
+                    <Button
+                      variant="primary"
+                      type="submit"
+                      className="w-full"
+                      disabled={setConfig.isPending}
+                    >
+                      Update calculation
+                    </Button>
+                  )}
                 </div>
               </Form>
             </Alert>
@@ -81,7 +85,7 @@ export default function DistributePage() {
   );
 }
 
-function MinimumQuorum() {
+function MinimumQuorum({ disabled = false }: { disabled?: boolean }) {
   return (
     <FormControl
       name="threshold"
@@ -89,7 +93,7 @@ function MinimumQuorum() {
       hint="Required voters for vote validity"
       valueAsNumber
     >
-      <Input type="number" />
+      <Input disabled={disabled} type="number" />
     </FormControl>
   );
 }

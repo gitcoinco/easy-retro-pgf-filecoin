@@ -1,5 +1,6 @@
 import { getAddress, isAddress } from "viem";
 import * as wagmiChains from "wagmi/chains";
+import { type CalculationSchema } from "~/features/distribute/types";
 
 export type RoundId = "ez-rpgf-filecoin-1" | "ez-rpgf-filecoin-2";
 
@@ -47,6 +48,23 @@ export const metadata = {
   image: "/fil-rpgf-2.jpg",
 };
 
+const defaultCalculation = {
+  calculation: "sum",
+  threshold: 6,
+} as unknown as typeof CalculationSchema;
+
+const poolAmount = BigInt(270000 * 10 ** 18);
+
+const encodedRoundIdByRound = {
+  "ez-rpgf-filecoin-1":
+    "0x657a2d727067662d66696c65636f696e2d310000000000000000000000000000",
+  "ez-rpgf-filecoin-2":
+    "0x657a2d727067662d66696c65636f696e2d320000000000000000000000000000",
+};
+export const isFromCurrentRound = (encodedRoundID: string) => {
+  return encodedRoundIdByRound[config.roundId as keyof typeof encodedRoundIdByRound] === encodedRoundID;
+}
+
 export const config = {
   logoUrl: "https://filecoin.io/images/filecoin-logo.svg",
   pageSize: 3 * 500,
@@ -68,6 +86,8 @@ export const config = {
 
   network:
     wagmiChains[process.env.NEXT_PUBLIC_CHAIN_NAME as keyof typeof wagmiChains],
+  poolAmount,
+  distributionCalculation: defaultCalculation,
 };
 
 export const nativeToken = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";

@@ -12,6 +12,7 @@ import { useResults } from "~/hooks/useResults";
 import { SortFilter } from "~/components/SortFilter";
 import { ProjectItem, ProjectItemAwarded } from "./ProjectItem";
 import { Attestation } from "@ethereum-attestation-service/eas-sdk";
+import { isFromCurrentRound } from "~/config";
 
 export function Projects() {
   const projects = useSearchProjects();
@@ -45,13 +46,14 @@ export function Projects() {
         data={(projects.data ?? []) as Attestation[]}
         isLoading={projects.isLoading}
         renderItem={(item: any, { isLoading }) => {
+          const isCurrentRound = isFromCurrentRound(item?.round ?? "");
           return (
             <Link
               key={item.id}
               href={`/projects/${item.id}`}
               className={clsx("relative", { ["animate-pulse"]: isLoading })}
             >
-              {!isLoading && getAppState() === "VOTING" ? (
+              {!isLoading && getAppState() === "VOTING" && isCurrentRound ? (
                 <div className="absolute right-2 top-[100px] z-10 -mt-2">
                   <ProjectSelectButton
                     state={select.getState(item.id)}

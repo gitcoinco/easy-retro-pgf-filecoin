@@ -70,14 +70,15 @@ export const ballotRouter = createTRPCRouter({
         }).then((projects) =>
           Object.fromEntries(projects.map((p) => [p.id, p.name])),
         );
+        const roundId = config.roundId.split("ez-rpgf-filecoin-")[1]
         return ballots.flatMap(
           ({ voterId: voterIdByRound, signature, publishedAt, votes }) =>
             (votes as unknown as Vote[]).reduce(
               (acc, { amount, projectId }) => {
-                const [roundId, voterId] = voterIdByRound.includes("-")
+                const [voterRoundId, voterId] = voterIdByRound.includes("-")
                   ? voterIdByRound.split("-")
                   : [1, voterIdByRound];
-                if (roundId === config.roundId) {
+                if (voterRoundId === roundId) {
                   acc.push({
                     voterId,
                     signature,

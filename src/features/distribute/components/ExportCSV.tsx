@@ -18,7 +18,7 @@ export function ExportCSV({ votes }: { votes: Distribution[] }) {
 
     // Generate CSV file
     const csv = format(votesWithProjects, {
-      columns: ["projectId", "name", "payoutAddress", "amount"],
+      columns: ["projectId", "name", "githubLink", "amount"],
     });
     window.open(`data:text/csv;charset=utf-8,${csv}`);
   }, [votes]);
