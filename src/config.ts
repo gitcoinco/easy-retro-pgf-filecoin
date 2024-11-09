@@ -1,6 +1,8 @@
 import { getAddress, isAddress } from "viem";
 import * as wagmiChains from "wagmi/chains";
 
+export type RoundId = "ez-rpgf-filecoin-1" | "ez-rpgf-filecoin-2";
+
 const admins = {
   "ez-rpgf-filecoin-1": process.env.NEXT_PUBLIC_ADMIN_ADDRESSES,
   // For each new round, add a new admin addresses in .env file
@@ -33,7 +35,6 @@ function getAdmins(roundId: string) {
   return (
     (admins[roundId as keyof typeof admins] ?? "").split(",") as `0x${string}`[]
   ).map((addr) => {
-    console.log(addr);
     if (isAddress(addr)) return getAddress(addr);
     throw new Error("Invalid admin address");
   });
