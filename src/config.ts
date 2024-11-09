@@ -53,7 +53,17 @@ const defaultCalculation = {
   threshold: 6,
 } as unknown as typeof CalculationSchema;
 
-const poolAmount = BigInt(270 * 10 ** 18);
+const poolAmount = BigInt(270000 * 10 ** 18);
+
+const encodedRoundIdByRound = {
+  "ez-rpgf-filecoin-1":
+    "0x657a2d727067662d66696c65636f696e2d310000000000000000000000000000",
+  "ez-rpgf-filecoin-2":
+    "0x657a2d727067662d66696c65636f696e2d320000000000000000000000000000",
+};
+export const isFromCurrentRound = (encodedRoundID: string) => {
+  return encodedRoundIdByRound[config.roundId as keyof typeof encodedRoundIdByRound] === encodedRoundID;
+}
 
 export const config = {
   logoUrl: "https://filecoin.io/images/filecoin-logo.svg",

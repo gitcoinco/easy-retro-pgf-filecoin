@@ -7,13 +7,14 @@ import { ProjectAddToBallot } from "~/features/projects/components/AddToBallot";
 import { getAppState } from "~/utils/state";
 import { ProjectAwarded } from "~/features/projects/components/ProjectAwarded";
 import { ProjectComments } from "~/features/comments/components/ProjectComments";
-
+import { isFromCurrentRound } from "~/config";
 export default function ProjectDetailsPage({ projectId = "" }) {
   const project = useProjectById(projectId, 0);
   const { name } = project.data ?? {};
+  const isCurrentRound = isFromCurrentRound(project.data?.round ?? "");
 
   const action =
-    getAppState() === "RESULTS" ? null : ( //<ProjectAwarded id={projectId} />
+    getAppState() === "RESULTS" || !isCurrentRound ? null : ( //<ProjectAwarded id={projectId} />
       <ProjectAddToBallot id={projectId} name={name} />
     );
   return (

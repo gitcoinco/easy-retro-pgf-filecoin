@@ -19,6 +19,7 @@ export type AttestationWithMetadata = {
 export type Attestation = Omit<AttestationWithMetadata, "decodedDataJson"> & {
   name: string;
   metadataPtr: string;
+  round: string;
 };
 
 type MatchFilter = { equals?: string; in?: string[]; gte?: number };
