@@ -8,13 +8,14 @@ import { Dialog } from "~/components/ui/Dialog";
 import { Spinner } from "~/components/ui/Spinner";
 import { AllocationForm } from "~/components/AllocationList";
 import { sumBallot, useSaveBallot } from "~/features/ballot/hooks/useBallot";
-import { type Vote } from "~/features/ballot/types";
-import { useProjectsById } from "~/features/projects/hooks/useProjects";
+import { type BallotCSV, type Vote } from "~/features/ballot/types";
 import { parse, format } from "~/utils/csv";
 import { formatNumber } from "~/utils/formatNumber";
 import { getAppState } from "~/utils/state";
 import { useAccount } from "wagmi";
 import { useRouter } from "next/router";
+import { useRoundProjects } from "~/hooks/useRoundProjects";
+import { config } from "~/config";
 
 export function BallotAllocationForm() {
   const { address, isConnecting } = useAccount();
@@ -85,12 +86,14 @@ function ImportCSV() {
 
   const importCSV = useCallback((csvString: string) => {
     // Parse CSV and build the ballot data (remove name column)
-    const { data } = parse<Vote>(csvString);
-    const votes = data.map(({ projectId, amount }) => ({
-      projectId,
-      amount: Number(amount),
-    }));
-    console.log(123, votes);
+    const { data } = parse<BallotCSV>(csvString);
+    const filteredData = data.filter((project) => project["FIL Allocated"]);
+    const votes = filteredData.map(
+      ({ "Project ID": projectId, "FIL Allocated": amount }) => ({
+        projectId,
+        amount: Number(amount),
+      }),
+    );
     setVotes(votes);
   }, []);
 
@@ -150,24 +153,36 @@ function ImportCSV() {
 }
 function ExportCSV({ votes }: { votes: Vote[] }) {
   // Fetch projects for votes to get the name
-  const projects = useProjectsById(votes.map((v) => v.projectId));
+  const { data: projects, isLoading } = useRoundProjects({
+    round: config.roundId,
+  });
+  // const projects = useProjectsById(votes.map((v) => v.projectId));
 
   const exportCSV = useCallback(async () => {
-    // Append project name to votes
-    const votesWithProjects = votes.map((vote) => ({
-      ...vote,
-      name: projects.data?.find((p) => p.id === vote.projectId)?.name,
-    }));
+    if (!projects) return;
+    const votesWithProjects = projects.map(
+      ({ name, impactCategory, id: projectId }) => ({
+        Name: name,
+        "FIL Allocated": votes.find((v) => v.projectId === projectId)?.amount,
+        Category: impactCategory[0],
+        "Project ID": projectId,
+      }),
+    );
 
     // Generate CSV file
     const csv = format(votesWithProjects, {
-      columns: ["projectId", "name", "amount"],
+      columns: ["Name", "FIL Allocated", "Category", "Project ID"],
     });
     window.open(`data:text/csv;charset=utf-8,${csv}`);
   }, [projects, votes]);
 
   return (
-    <IconButton size="sm" icon={FileDown} onClick={exportCSV}>
+    <IconButton
+      size="sm"
+      icon={FileDown}
+      onClick={exportCSV}
+      disabled={isLoading}
+    >
       Export CSV
     </IconButton>
   );
