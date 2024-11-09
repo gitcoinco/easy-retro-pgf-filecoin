@@ -1,5 +1,12 @@
 import { z } from "zod";
 
+export const BallotCSVSchema = z.object({
+  Name: z.string(),
+  "FIL Allocated": z.number().optional(),
+  Category: z.string(),
+  "Project ID": z.string(),
+});
+
 export const VoteSchema = z.object({
   projectId: z.string(),
   amount: z.number().min(0),
@@ -19,6 +26,7 @@ export const BallotPublishSchema = z.object({
   }),
 });
 
+export type BallotCSV = z.infer<typeof BallotCSVSchema>;
 export type Vote = z.infer<typeof VoteSchema>;
 export type Ballot = z.infer<typeof BallotSchema>;
 export type BallotPublish = z.infer<typeof BallotPublishSchema>;
