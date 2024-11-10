@@ -1,21 +1,20 @@
-import { AlertCircle, FileDown, FileUp } from "lucide-react";
+import { AlertCircle } from "lucide-react";
 import Link from "next/link";
-import { useCallback, useRef, useState } from "react";
+import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { Alert } from "~/components/ui/Alert";
-import { Button, IconButton } from "~/components/ui/Button";
+import { Button } from "~/components/ui/Button";
 import { Dialog } from "~/components/ui/Dialog";
 import { Spinner } from "~/components/ui/Spinner";
 import { AllocationForm } from "~/components/AllocationList";
 import { sumBallot, useSaveBallot } from "~/features/ballot/hooks/useBallot";
-import { type BallotCSV, type Vote } from "~/features/ballot/types";
-import { parse, format } from "~/utils/csv";
+import { type Vote } from "~/features/ballot/types";
 import { formatNumber } from "~/utils/formatNumber";
 import { getAppState } from "~/utils/state";
 import { useAccount } from "wagmi";
 import { useRouter } from "next/router";
-import { useRoundProjects } from "~/hooks/useRoundProjects";
-import { config } from "~/config";
+import { ImportXLSX } from "./ImportXLSX";
+import { ExportCSV } from "./ExportCSV";
 
 export function BallotAllocationForm() {
   const { address, isConnecting } = useAccount();
@@ -48,7 +47,7 @@ export function BallotAllocationForm() {
       )}
       <div className="mb-2 justify-between sm:flex">
         <div className="flex gap-2">
-          <ImportCSV />
+          <ImportXLSX />
           <ExportCSV votes={votes} />
         </div>
         {votes.length ? <ClearBallot /> : null}
@@ -78,115 +77,7 @@ export function BallotAllocationForm() {
     </div>
   );
 }
-function ImportCSV() {
-  const form = useFormContext();
-  const [votes, setVotes] = useState<Vote[]>([]);
-  const save = useSaveBallot();
-  const csvInputRef = useRef<HTMLInputElement>(null);
 
-  const importCSV = useCallback((csvString: string) => {
-    // Parse CSV and build the ballot data (remove name column)
-    const { data } = parse<BallotCSV>(csvString);
-    const filteredData = data.filter((project) => project["FIL Allocated"]);
-    const votes = filteredData.map(
-      ({ "Project ID": projectId, "FIL Allocated": amount }) => ({
-        projectId,
-        amount: Number(amount),
-      }),
-    );
-    setVotes(votes);
-  }, []);
-
-  return (
-    <>
-      <IconButton
-        size="sm"
-        icon={FileUp}
-        onClick={() => csvInputRef.current?.click()}
-      >
-        Import CSV
-      </IconButton>
-
-      <input
-        ref={csvInputRef}
-        type="file"
-        accept="*.csv"
-        className="hidden"
-        onChange={(e) => {
-          const [file] = e.target.files ?? [];
-          if (!file) return;
-          // CSV parser doesn't seem to work with File
-          // Read the CSV contents as string
-          const reader = new FileReader();
-          reader.readAsText(file);
-          reader.onload = () => importCSV(String(reader.result));
-          reader.onerror = () => console.log(reader.error);
-        }}
-      />
-      <Dialog
-        size="sm"
-        title="Save ballot?"
-        isOpen={votes.length > 0}
-        onOpenChange={() => setVotes([])}
-      >
-        <p className="mb-6 leading-6">
-          This will replace your ballot with the CSV.
-        </p>
-        <div className="flex justify-end">
-          <Button
-            variant="primary"
-            disabled={save.isPending}
-            onClick={() => {
-              save
-                .mutateAsync({ votes })
-                .then(() => form.reset({ votes }))
-                .catch(console.log);
-              setVotes([]);
-            }}
-          >
-            Yes I'm sure
-          </Button>
-        </div>
-      </Dialog>
-    </>
-  );
-}
-function ExportCSV({ votes }: { votes: Vote[] }) {
-  // Fetch projects for votes to get the name
-  const { data: projects, isLoading } = useRoundProjects({
-    round: config.roundId,
-  });
-  // const projects = useProjectsById(votes.map((v) => v.projectId));
-
-  const exportCSV = useCallback(async () => {
-    if (!projects) return;
-    const votesWithProjects = projects.map(
-      ({ name, impactCategory, id: projectId }) => ({
-        Name: name,
-        "FIL Allocated": votes.find((v) => v.projectId === projectId)?.amount,
-        Category: impactCategory[0],
-        "Project ID": projectId,
-      }),
-    );
-
-    // Generate CSV file
-    const csv = format(votesWithProjects, {
-      columns: ["Name", "FIL Allocated", "Category", "Project ID"],
-    });
-    window.open(`data:text/csv;charset=utf-8,${csv}`);
-  }, [projects, votes]);
-
-  return (
-    <IconButton
-      size="sm"
-      icon={FileDown}
-      onClick={exportCSV}
-      disabled={isLoading}
-    >
-      Export CSV
-    </IconButton>
-  );
-}
 function ClearBallot() {
   const form = useFormContext();
   const [isOpen, setOpen] = useState(false);
