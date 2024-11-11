@@ -1,5 +1,5 @@
 import { fromHex, type Address } from "viem";
-import { config, eas } from "~/config";
+import { config, eas, isBadgeHolder } from "~/config";
 import { createCachedFetch } from "./fetch";
 import { ethers } from "ethers";
 
@@ -82,6 +82,7 @@ export async function fetchAttestations(
 
 export async function fetchApprovedVoter(address: string) {
   if (config.skipApprovedVoterCheck) return true;
+  if(isBadgeHolder(address)) return true;
   return fetchAttestations([eas.schemas.approval], {
     where: {
       recipient: { equals: address },

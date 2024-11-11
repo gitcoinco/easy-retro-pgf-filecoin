@@ -6,7 +6,7 @@ import {
   createDataFilter,
   fetchApprovedVoter,
 } from "~/utils/fetchAttestations";
-import { config, eas } from "~/config";
+import { config, eas, isBadgeHolder } from "~/config";
 
 export const FilterSchema = z.object({
   limit: z.number().default(3 * 8),
@@ -17,7 +17,8 @@ export const votersRouter = createTRPCRouter({
   approved: publicProcedure
     .input(z.object({ address: z.string() }))
     .query(async ({ input }) => {
-      return fetchApprovedVoter(input.address);
+      // return fetchApprovedVoter(input.address);
+      return isBadgeHolder(input.address) ? 1 : 0;
     }),
   list: publicProcedure.input(FilterSchema).query(async ({ ctx }) => {
     return fetchAttestations([eas.schemas.approval], {
