@@ -41,6 +41,18 @@ function getAdmins(roundId: string) {
   });
 }
 
+export const isBadgeHolder = (address: string): boolean => {
+  const badgeHolders = process.env.NEXT_PUBLIC_BADGEHOLDERS_ADDRESSES?.split(
+    ",",
+  ).map((holder) => holder.toLowerCase());
+
+  return badgeHolders?.includes(address.toLowerCase()) ?? false;
+};
+
+export const getBadgeHolders = (): string[] => {
+  return process.env.NEXT_PUBLIC_BADGEHOLDERS_ADDRESSES?.split(",") ?? [];
+};
+
 export const metadata = {
   title: "FIL RetroPGF",
   description: "Filecoin Retro Public Goods",

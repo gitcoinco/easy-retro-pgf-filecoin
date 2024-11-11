@@ -3,7 +3,7 @@ import { Button } from "~/components/ui/Button";
 import { Form, FormControl, Input, Select } from "~/components/ui/Form";
 import { Skeleton } from "~/components/ui/Skeleton";
 import { Spinner } from "~/components/ui/Spinner";
-import { config } from "~/config";
+import { config, getBadgeHolders } from "~/config";
 import { Distributions } from "~/features/distribute/components/Distributions";
 import { CalculationSchema } from "~/features/distribute/types";
 import { AdminLayout } from "~/layouts/AdminLayout";
@@ -99,7 +99,8 @@ function MinimumQuorum({ disabled = false }: { disabled?: boolean }) {
 }
 
 function VoterCount() {
-  const voters = api.voters.list.useQuery({ limit: 1000 });
+  // const voters = api.voters.list.useQuery({ limit: 1000 });
+  const voters = getBadgeHolders();
   const votes = api.results.votes.useQuery();
 
   return (
@@ -110,9 +111,11 @@ function VoterCount() {
       <div className="pt-1 text-center text-2xl">
         <Skeleton
           className="h-8 w-20 dark:bg-gray-700"
-          isLoading={voters.isPending || votes.isPending}
+          // isLoading={voters.isPending || votes.isPending}
+          isLoading={votes.isPending}
         >
-          {votes.data?.totalVoters} / {voters.data?.length}
+          {/* {votes.data?.totalVoters} / {voters.data?.length} */}
+          {votes.data?.totalVoters} / {voters?.length}
         </Skeleton>
       </div>
     </div>
