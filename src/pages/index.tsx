@@ -64,7 +64,11 @@ export default function LandingPage({}) {
   #### What's Next?
 
 
-  Phase 1, the Project Showcase, starts on 30th September. We are looking forward to seeing projects highlight their impact on the Filecoin ecosystem. Learn more about how to participate [here](https://fil-retropgf.notion.site/Project-Showcase-10ad0d646da18042b92fe942ebf41090?pvs=4!).
+Phase 3, Badgeholder Voting, is currently in progress until 11:59pm Pacific Time on 25th November. We are looking forward to seeing badgeholders discuss and vote on the impact created by projects in the last 6 months. 
+
+What should you do while waiting for the results to come out? Participate in and read more about our add-on Futarchy program [today](https://x.com/gitcoin/status/1857813745948381598?s=46&t=E7bK9sdGpTyGyb-mXGwD0g)!
+
+Also ensure you have made your project DRIPs-friendly! Check our [DRIPs guidelines](https://fil-retropgf.notion.site/Round-2-How-to-use-DRIPs-114d0d646da1808c84eaca0751029519?pvs=4) through the notion. Get in touch with the operations team if you have made or want to make any DRIPs updates.
 
   `}
         </Markdown>
