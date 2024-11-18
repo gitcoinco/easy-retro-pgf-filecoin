@@ -48,10 +48,12 @@ export const Layout = ({ children, ...props }: Props) => {
         //   href: "/voters",
         //   children: "Voters",
         // },
-        {
-          href: "/distribute",
-          children: "Distribute",
-        },
+
+        // Remove distribute from the nav bar till the voting phase is over
+        // {
+        //   href: "/distribute",
+        //   children: "Distribute",
+        // },
         {
           href: "/projects",
           children: "Previous Projects",
