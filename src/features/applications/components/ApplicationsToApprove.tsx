@@ -95,7 +95,6 @@ export function ApplicationItem({
           {...form.register(`selected`)}
           type="checkbox"
         />
-
         <ProjectAvatar
           isLoading={isLoading}
           size="sm"
@@ -132,7 +131,7 @@ export function ApplicationItem({
             <Badge>Pending</Badge>
           )}
         </div>
-        {isApproved ? (
+        {isApproved && (
           <Button
             size="sm"
             variant="outline"
@@ -149,19 +148,19 @@ export function ApplicationItem({
           >
             Revoke
           </Button>
-        ) : (
-          <Button
-            disabled={isLoading}
-            as={Link}
-            target="_blank"
-            href={`/applications/${id}`}
-            className="transition-transform group-data-[state=closed]:rotate-180"
-            type="button"
-            variant=""
-          >
-            Review
-          </Button>
         )}
+
+        <Button
+          disabled={isLoading}
+          as={Link}
+          target="_blank"
+          href={`/applications/${id}`}
+          className="transition-transform group-data-[state=closed]:rotate-180"
+          type="button"
+          variant=""
+        >
+          {isApproved ? "View" : "Review"}
+        </Button>
       </label>
     </div>
   );
