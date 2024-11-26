@@ -1,5 +1,5 @@
 import { FileUp } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { Button, IconButton } from "~/components/ui/Button";
 import { Dialog } from "~/components/ui/Dialog";
@@ -12,6 +12,10 @@ export function ImportXLSX() {
   const [votes, setVotes] = useState<Vote[]>([]);
   const save = useSaveBallot();
   const csvInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    // 
+  }, [votes, setVotes, save]);
 
   const importBallotXLSX = (file: File) => {
     const reader = new FileReader();
@@ -52,6 +56,7 @@ export function ImportXLSX() {
           const [file] = e.target.files ?? [];
           if (!file) return;
           importBallotXLSX(file);
+          e.target.value = "";
         }}
       />
       <Dialog
