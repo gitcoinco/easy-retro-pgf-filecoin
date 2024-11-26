@@ -1,4 +1,9 @@
-import { type PropsWithChildren, type ReactNode, useState } from "react";
+import {
+  type PropsWithChildren,
+  type ReactNode,
+  useEffect,
+  useState,
+} from "react";
 import clsx from "clsx";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -38,8 +43,13 @@ function BallotOverview() {
   const sum = sumBallot(ballot?.votes);
 
   const allocations = ballot?.votes ?? [];
-  const canSubmit = router.route === "/ballot" && allocations.length;
+  const isBallotPage = router.route === "/ballot";
+  const canSubmit = isBallotPage && allocations.length;
   const isProjectsPage = router.route === "/projects";
+
+  useEffect(() => {
+    //
+  }, [ballot]);
 
   const DownloadProjectsButton = () => {
     const download = useDownloadProjects();
@@ -143,9 +153,16 @@ function BallotOverview() {
           </div>
         </BallotSection>
         {ballot?.publishedAt ? (
-          <Button className="w-full" as={Link} href={`/ballot/confirmation`}>
-            View submitted ballot
-          </Button>
+          <div className="flex flex-col gap-2">
+            {!isBallotPage && (
+              <Button className="w-full" as={Link} href={`/ballot`}>
+                Change submitted ballot
+              </Button>
+            )}
+            <Button className="w-full" as={Link} href={`/ballot/confirmation`}>
+              View submitted ballot
+            </Button>
+          </div>
         ) : isSaving ? (
           <Button disabled className="w-full" variant="primary">
             Adding to ballot...

@@ -109,12 +109,11 @@ export const ballotRouter = createTRPCRouter({
       if (isAfter(new Date(), config.votingEndsAt)) {
         throw new TRPCError({ code: "FORBIDDEN", message: "Voting has ended" });
       }
-      await verifyUnpublishedBallot(voterIdByRound, ctx.db);
-
+      // await verifyUnpublishedBallot(voterIdByRound, ctx.db);
       return ctx.db.ballot.upsert({
         select: defaultBallotSelect,
         where: { voterId: voterIdByRound },
-        update: input,
+        update: { ...input, publishedAt: null },
         create: { voterId: voterIdByRound, ...input },
       });
     }),
