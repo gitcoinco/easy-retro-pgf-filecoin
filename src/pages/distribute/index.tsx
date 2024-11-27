@@ -18,7 +18,7 @@ export default function DistributePage() {
 
   const calculation = settings.data?.config?.calculation;
 
-  const disableUpdateCalculation = true;
+  const disableUpdateCalculation = false;
 
   return (
     <AdminLayout
