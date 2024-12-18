@@ -57,19 +57,21 @@ export default function LandingPage({}) {
 
   We are grateful for the funds donated to the round by Protocol Labs, Filecoin Foundation and Holon, allowing us to distribute 300K FIL to these impactful projects.
 
+  **Round Documentation is available [here](https://www.notion.so/fil-retropgf/Round-2-Results-160d0d646da180b09e0ee8baa3c1dfb9?pvs=4).**
+
   Join our [telegram group](https://t.me/+U5XIROsTIdhhMTVl) to learn more about the round and to answer any queries you have!
 
   Join our [mailing list](https://forms.gle/RqZM7RtyNgtrVgEX6) to get updates on each Stage of the round!
 
+  #### Results are out!
+
+Votes have been tallied, issues have been resolved and the allocation results are out! Badgeholders have voted on 152 projects, 97 of which have been deemed eligible for funding. 
+
+Check them out here: [https://tinyurl.com/fil-rpgf-2-results](https://tinyurl.com/fil-rpgf-2-results)
+
   #### What's Next?
 
-
-Phase 3, Badgeholder Voting, is currently in progress until 11:59pm Pacific Time on 25th November. We are looking forward to seeing badgeholders discuss and vote on the impact created by projects in the last 6 months. 
-
-What should you do while waiting for the results to come out? Participate in and read more about our add-on Futarchy program [today](https://x.com/gitcoin/status/1857813745948381598?s=46&t=E7bK9sdGpTyGyb-mXGwD0g)!
-
-Also ensure you have made your project DRIPs-friendly! Check our [DRIPs guidelines](https://fil-retropgf.notion.site/Round-2-How-to-use-DRIPs-114d0d646da1808c84eaca0751029519?pvs=4) through the notion. Get in touch with the operations team if you have made or want to make any DRIPs updates.
-
+  We have listed next steps for [distribution](https://fil-retropgf.notion.site/Round-2-Distribution-160d0d646da1808fa6dee96aa96715cb?pvs=4) in our notion documentation that you can check out here.
   `}
         </Markdown>
       </div>
