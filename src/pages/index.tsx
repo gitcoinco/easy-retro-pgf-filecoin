@@ -67,7 +67,7 @@ export default function LandingPage({}) {
 
 Votes have been tallied, issues have been resolved and the allocation results are out! Badgeholders have voted on 152 projects, 97 of which have been deemed eligible for funding. 
 
-Check them out here: [https://tinyurl.com/fil-rpgf-2-results](https://tinyurl.com/fil-rpgf-2-results)
+Check them out here: [https://tinyurl.com/fil-retropgf2-results](https://tinyurl.com/fil-retropgf2-results)
 
   #### What's Next?
 
