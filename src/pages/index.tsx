@@ -57,7 +57,7 @@ export default function LandingPage({}) {
 
   We are grateful for the funds donated to the round by Protocol Labs, Filecoin Foundation and Holon, allowing us to distribute 300K FIL to these impactful projects.
 
-  **Round Documentation is available [here](https://www.notion.so/fil-retropgf/Round-2-Results-160d0d646da180b09e0ee8baa3c1dfb9?pvs=4).**
+  **Round Documentation is available [here](https://fil-retropgf.notion.site/FIL-RetroPGF-4b6f5358440043c8bb1bf53f0297541e).**
 
   Join our [telegram group](https://t.me/+U5XIROsTIdhhMTVl) to learn more about the round and to answer any queries you have!
 
