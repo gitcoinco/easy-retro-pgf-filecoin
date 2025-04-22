@@ -82,7 +82,7 @@ export async function fetchAttestations(
 
 export async function fetchApprovedVoter(address: string) {
   if (config.skipApprovedVoterCheck) return true;
-  if(isBadgeHolder(address)) return true;
+  // if(isBadgeHolder(address)) return true;
   return fetchAttestations([eas.schemas.approval], {
     where: {
       recipient: { equals: address },

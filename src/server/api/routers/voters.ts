@@ -17,8 +17,8 @@ export const votersRouter = createTRPCRouter({
   approved: publicProcedure
     .input(z.object({ address: z.string() }))
     .query(async ({ input }) => {
-      // return fetchApprovedVoter(input.address);
-      return isBadgeHolder(input.address) ? 1 : 0;
+      return fetchApprovedVoter(input.address);
+      // return isBadgeHolder(input.address) ? 1 : 0;
     }),
   list: publicProcedure.input(FilterSchema).query(async ({ ctx }) => {
     return fetchAttestations([eas.schemas.approval], {
@@ -30,10 +30,19 @@ export const votersRouter = createTRPCRouter({
         ],
       },
     }).then(async (voters) => {
+      const roundId = config.roundId.split("ez-rpgf-filecoin-")[1];
+      const distinctVoters = [
+        ...new Set(voters.map((v) => v.recipient)),
+      ];
+
+      const distrinctVotersAttestations = distinctVoters
+        .map((v) => voters.find((a) => a.recipient === v))
+        .filter((v) => v !== undefined);
+
       const publishedBallots = await ctx.db.ballot
         .findMany({
           where: {
-            voterId: { in: voters.map((v) => v.recipient) },
+            voterId: { in: distinctVoters.map((v) => `${roundId}-${v}`) },
             publishedAt: { not: null },
           },
           select: { voterId: true, publishedAt: true },
@@ -41,9 +50,9 @@ export const votersRouter = createTRPCRouter({
         .then((r) =>
           Object.fromEntries(r.map((v) => [v.voterId, Boolean(v.publishedAt)])),
         );
-      return voters.map((v) => ({
+      return distrinctVotersAttestations.map((v) => ({
         ...v,
-        hasVoted: publishedBallots?.[v.recipient],
+        hasVoted: publishedBallots?.[`${roundId}-${v.recipient}`],
       }));
     });
   }),
