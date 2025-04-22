@@ -31,7 +31,7 @@ export function useSearchProjects(filterOverride?: Partial<Filter>) {
   if (isRandom && !searching) {
     return api.projects.search.useQuery(
       {
-        round: roundsMap[filter.round as keyof typeof roundsMap],
+        round: roundsMap[filter.round],
       },
       {
         select: (data: CustomAttestation[]): EASAttestation[] => {
@@ -43,7 +43,7 @@ export function useSearchProjects(filterOverride?: Partial<Filter>) {
   } else {
     return api.projects.search.useQuery({
       ...filter,
-      round: roundsMap[filter.round as keyof typeof roundsMap],
+      round: roundsMap[filter.round],
       sortOrder:
         isRandom && searching ? SortOrder.asc : (filter.sortOrder as SortOrder),
       ...filterOverride,
@@ -62,7 +62,7 @@ export function useProjectCount() {
 export function useDownloadProjects() {
   const { round } = useFilter();
 
-  const roundId = roundsMap[round as keyof typeof roundsMap] as RoundId;
+  const roundId = roundsMap[round]!;
 
   const { data, isLoading } = useRoundProjects({
     round: roundId,

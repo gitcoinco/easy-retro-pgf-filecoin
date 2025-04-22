@@ -2,34 +2,53 @@ import { getAddress, isAddress } from "viem";
 import * as wagmiChains from "wagmi/chains";
 import { type CalculationSchema } from "~/features/distribute/types";
 
-export type RoundId = "ez-rpgf-filecoin-1" | "ez-rpgf-filecoin-2";
+export type RoundId =
+  | "ez-rpgf-filecoin-1"
+  | "ez-rpgf-filecoin-2"
+  | "ez-rpgf-filecoin-3";
 
 const admins = {
   "ez-rpgf-filecoin-1": process.env.NEXT_PUBLIC_ADMIN_ADDRESSES,
-  // For each new round, add a new admin addresses in .env file
   "ez-rpgf-filecoin-2": process.env.NEXT_PUBLIC_ADMIN_ADDRESSES,
+  "ez-rpgf-filecoin-3": process.env.NEXT_PUBLIC_ADMIN_ADDRESSES,
 };
 export const filecoinRounds = {
   "ez-rpgf-filecoin-1": getAdmins("ez-rpgf-filecoin-1"),
   "ez-rpgf-filecoin-2": getAdmins("ez-rpgf-filecoin-2"),
+  "ez-rpgf-filecoin-3": getAdmins("ez-rpgf-filecoin-3"),
 };
 
 export const roundsMap = {
   "1": "ez-rpgf-filecoin-1",
   "2": "ez-rpgf-filecoin-2",
-};
+  "3": "ez-rpgf-filecoin-3",
+} as Record<string, RoundId>;
 
 export const previousRoundsMap = {
   "1": "ez-rpgf-filecoin-1",
+  "2": "ez-rpgf-filecoin-2",
 };
 
 export const roundsStartsAt = {
   "ez-rpgf-filecoin-1": new Date("2024-04-08T12:00:00.000Z"),
-  "ez-rpgf-filecoin-2": new Date(process.env.NEXT_PUBLIC_START_DATE!),
-};
+  "ez-rpgf-filecoin-2": new Date("2024-10-14T00:00:00.000Z"),
+  "ez-rpgf-filecoin-3": new Date(process.env.NEXT_PUBLIC_START_DATE!),
+} as Record<string, Date>;
+
+export const roundsEndsAt = {
+  "ez-rpgf-filecoin-1": new Date("2024-10-14T00:00:00.000Z"),
+  "ez-rpgf-filecoin-2": new Date("2024-11-03T23:59:00-08:00"),
+  "ez-rpgf-filecoin-3": new Date(
+    process.env.NEXT_PUBLIC_REGISTRATION_END_DATE!,
+  ),
+} as Record<string, Date>;
 
 export const getStartsAt = (roundId: string) => {
-  return roundsStartsAt[roundId as keyof typeof roundsStartsAt];
+  return roundsStartsAt[roundId]!;
+};
+
+export const getEndsAt = (roundId: string) => {
+  return roundsEndsAt[roundId];
 };
 
 function getAdmins(roundId: string) {
@@ -72,10 +91,16 @@ const encodedRoundIdByRound = {
     "0x657a2d727067662d66696c65636f696e2d310000000000000000000000000000",
   "ez-rpgf-filecoin-2":
     "0x657a2d727067662d66696c65636f696e2d320000000000000000000000000000",
+  "ez-rpgf-filecoin-3":
+    "0x657a2d727067662d66696c65636f696e2d330000000000000000000000000000",
 };
 export const isFromCurrentRound = (encodedRoundID: string) => {
-  return encodedRoundIdByRound[config.roundId as keyof typeof encodedRoundIdByRound] === encodedRoundID;
-}
+  return (
+    encodedRoundIdByRound[
+      config.roundId as keyof typeof encodedRoundIdByRound
+    ] === encodedRoundID
+  );
+};
 
 export const config = {
   logoUrl: "https://filecoin.io/images/filecoin-logo.svg",
