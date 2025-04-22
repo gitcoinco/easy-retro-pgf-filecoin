@@ -36,6 +36,20 @@ const dataParsers = {
     impactMetrics: [],
     fundingSources: [],
   }),
+  "ez-rpgf-filecoin-3": (app: Application & Attestation) => ({
+    name: app.name,
+    bio: app.bio,
+    categoryQuestions: JSON.stringify(app.categoryQuestions),
+    contributionDescription: app.contributionDescription,
+    contributionLinks: JSON.stringify(app.contributionLinks),
+    githubProjectLink: app.githubProjectLink,
+    impactCategory: app.impactCategory[0],
+    impactDescription: app.impactDescription,
+    twitterPost: app.twitterPost,
+    websiteUrl: app.websiteUrl,
+    impactMetrics: [],
+    fundingSources: [],
+  }),
 };
 
 const columns = {
@@ -62,6 +76,17 @@ const columns = {
     "githubProjectLink",
     "categoryQuestions",
   ],
+  "ez-rpgf-filecoin-3": [
+    "name",
+    "bio",
+    "websiteUrl",
+    "contributionDescription",
+    "impactDescription",
+    "impactCategory",
+    "contributionLinks",
+    "githubProjectLink",
+    "categoryQuestions",
+  ],
 };
 export const convertAndDownload = ({
   data,
@@ -71,7 +96,7 @@ export const convertAndDownload = ({
   round: RoundId;
 }) => {
   // Manually transform complex data fields before unparsing
-  const transformedData = data.map((app) => {
+  const transformedData = data.map((app ) => {
     return dataParsers[round](app);
   });
 

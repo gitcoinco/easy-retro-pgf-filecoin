@@ -99,8 +99,8 @@ function MinimumQuorum({ disabled = false }: { disabled?: boolean }) {
 }
 
 function VoterCount() {
-  // const voters = api.voters.list.useQuery({ limit: 1000 });
-  const voters = getBadgeHolders();
+  const voters = api.voters.list.useQuery({ limit: 1000 });
+  // const voters = getBadgeHolders();
   const votes = api.results.votes.useQuery();
 
   return (
@@ -114,8 +114,8 @@ function VoterCount() {
           // isLoading={voters.isPending || votes.isPending}
           isLoading={votes.isPending}
         >
-          {/* {votes.data?.totalVoters} / {voters.data?.length} */}
-          {votes.data?.totalVoters} / {voters?.length}
+          {votes.data?.totalVoters} / {voters.data?.length}
+          {/* {votes.data?.totalVoters} / {voters?.length} */}
         </Skeleton>
       </div>
     </div>

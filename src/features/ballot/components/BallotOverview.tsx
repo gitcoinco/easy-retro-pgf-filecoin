@@ -27,7 +27,7 @@ import { config } from "~/config";
 import { useIsMutating } from "@tanstack/react-query";
 import { getQueryKey } from "@trpc/react-query";
 import { api } from "~/utils/api";
-import { getAppState } from "~/utils/state";
+import { useAppState } from "~/utils/state";
 import dynamic from "next/dynamic";
 import { createComponent } from "~/components/ui";
 import { tv } from "tailwind-variants";
@@ -61,10 +61,10 @@ function BallotOverview() {
           size="sm"
           variant="secondary"
           onClick={download.downloadMetadata}
-          isLoading={download.isLoading || download.count === 0}
+          isLoading={download.isLoading}
           disabled={download.isLoading || download.count === 0}
         >
-          {`Download projects`}
+          {`Download projects ${!!download.count ? `(${download.count})` : ""}`}
         </Button>
       </BallotMessage>
     );
@@ -72,18 +72,18 @@ function BallotOverview() {
 
   const { data: projectCount } = useProjectCount();
 
-  const appState = getAppState();
+  const appState = useAppState();
   if (appState === "RESULTS")
     return (
       <>
         {isProjectsPage && <DownloadProjectsButton />}
 
         <BallotMessage>
-          <BallotHeader>Results are live!</BallotHeader>
-          <BallotSection title="Results are being tallied"></BallotSection>
+          <BallotHeader>Round is finalized!</BallotHeader>
+          {/* <BallotSection title="Results are being tallied"></BallotSection>
           <Button as={Link} href={"/projects/results"}>
             Go to results
-          </Button>
+          </Button> */}
         </BallotMessage>
       </>
     );
@@ -102,7 +102,15 @@ function BallotOverview() {
       <>
         {isProjectsPage && <DownloadProjectsButton />}
         <BallotMessage>
-          <BallotHeader>Voting hasn't started yet</BallotHeader>
+          <BallotHeader>
+            {appState === "NOT_STARTED"
+              ? "Round has not started yet"
+              : appState === "APPLICATION"
+                ? "Application period in progress"
+                : appState === "REVIEWING"
+                  ? "Review period in progress"
+                  : "Voting has ended"}
+          </BallotHeader>
           {appState === "REVIEWING" ? (
             <BallotSection title="Applications are being reviewed" />
           ) : appState === "APPLICATION" ? (

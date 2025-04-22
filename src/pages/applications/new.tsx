@@ -19,8 +19,10 @@ export default function NewProjectPage() {
         to resume your application. Please refer only to the impact you have created between April - September 2024 when filling out the form.
       </p>
       <hr className="mb-8" />
-      {state !== "APPLICATION" ? (
+      {state !== "APPLICATION" && state !== "NOT_STARTED" ? (
         <Alert variant="info" title="Application period has ended"></Alert>
+      ) : state === "NOT_STARTED" ? (
+        <Alert variant="info" title="Application period has not started yet"></Alert>
       ) : address ? (
         <ApplicationForm />
       ) : (

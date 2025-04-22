@@ -5,16 +5,19 @@ import { Button } from "~/components/ui/Button";
 import { Markdown } from "~/components/ui/Markdown";
 import { RoundProgress } from "~/features/info/components/RoundProgress";
 import { Layout } from "~/layouts/DefaultLayout";
-
+import { getAppState } from "~/utils/state";
 export default function LandingPage({}) {
+  const state = getAppState();
   return (
     <Layout>
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <h1 className="text-4xl font-bold">Filecoin RetroPGF</h1>
-          <Button icon={Plus} as={Link} href={"/applications/new"}>
-            Apply with your project
-          </Button>
+          {state === "APPLICATION" && (
+            <Button icon={Plus} as={Link} href={"/applications/new"}>
+              Apply with your project
+            </Button>
+          )}
         </div>
         <RoundProgress />
         <Image

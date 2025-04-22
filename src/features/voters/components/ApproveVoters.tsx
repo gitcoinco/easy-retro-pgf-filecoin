@@ -12,13 +12,12 @@ import { Dialog } from "~/components/ui/Dialog";
 import { useApproveVoters } from "../hooks/useApproveVoters";
 import { useIsAdmin } from "~/hooks/useIsAdmin";
 import { useIsCorrectNetwork } from "~/hooks/useIsCorrectNetwork";
-import { EthAddressSchema } from "~/features/distribute/types";
 import {
   ethAddressFromDelegated,
   validateAddressString,
 } from "@glif/filecoin-address";
 import { EnsureCorrectNetwork } from "~/components/EnsureCorrectNetwork";
-
+import clsx from "clsx";
 function parseAddresses(addresses: string) {
   return (
     addresses
@@ -32,6 +31,11 @@ function parseAddresses(addresses: string) {
       // Remove duplicates
       .filter((addr, i, self) => self.indexOf(addr) === i)
   );
+}
+
+function getNumberOfWrongAddresses(addresses: string) {
+  const parsedAddresses = parseAddresses(addresses);
+  return !!addresses ? addresses.split(",").length - parsedAddresses.length : 0;
 }
 
 function ApproveVoters() {
@@ -75,7 +79,7 @@ function ApproveVoters() {
         </p>
         <Form
           schema={z.object({
-            voters: EthAddressSchema,
+            voters: z.string(),
           })}
           onSubmit={(values) => {
             const voters = parseAddresses(values.voters) as Address[];
@@ -90,12 +94,42 @@ function ApproveVoters() {
               rows={8}
             />
           </FormControl>
-          <div className="flex items-center justify-end">
+          <div className="flex items-center justify-between">
+            <InvalidAddressInfo />
             <ApproveButton isLoading={approve.isPending} isAdmin={isAdmin} />
           </div>
         </Form>
       </Dialog>
     </div>
+  );
+}
+
+function InvalidAddressInfo() {
+  const form = useFormContext<{ voters: string }>();
+  const voters = form.watch("voters") || "";
+  const totalAddresses = useMemo(
+    () => (!!voters ? voters.split(",").length : 0),
+    [voters],
+  );
+  const message = useMemo(() => {
+    const numberOfWrongAddresses = getNumberOfWrongAddresses(voters);
+    if (numberOfWrongAddresses === 0) return ``;
+    if (numberOfWrongAddresses === 1)
+      return `1 / ${totalAddresses} invalid or duplicate address`;
+    return `${numberOfWrongAddresses} / ${totalAddresses} invalid or duplicate addresses`;
+  }, [voters, totalAddresses]);
+
+  return (
+    <span
+      className={clsx(
+        "text-sm",
+        getNumberOfWrongAddresses(voters) > 0
+          ? "text-red-500"
+          : "text-green-500",
+      )}
+    >
+      {message}
+    </span>
   );
 }
 
